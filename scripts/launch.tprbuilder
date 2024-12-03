@@ -1,0 +1,19 @@
+#! /bin/sh
+#
+# Compile and install the TIGCC project builder
+#
+
+isbsd=`uname | grep "BSD"`
+if [ "$isbsd" = "" ]; then
+	#Assume GNU make
+        make=make
+else
+        make=gmake
+fi
+
+echo Installing tigcc project builder...
+cd ../sources/tprbuilder/src/
+${make} -e
+cp tprbuilder $TIGCC/bin
+${make} clean
+echo Done.

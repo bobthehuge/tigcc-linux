@@ -1,0 +1,63 @@
+Changelog of the TIGCC-local changes to Binutils (2.15 branch):
+
+2005-06-03  Kevin Kofler  <Kevin@tigcc.ticalc.org>
+
+	* gas/dwarfdbg.c (dwarf2_emit_insn_if_loc_seen): New function.
+	* gas/dwarfdbg.h (dwarf2_emit_insn_if_loc_seen): Prototype.
+        * gas/read.c (cons): Call dwarf2_emit_insn_if_loc_seen instead of dwarf2_emit_insn.
+
+2005-06-03  Kevin Kofler  <Kevin@tigcc.ticalc.org>
+
+        * gas/read.c (cons): Call dwarf2_emit_insn unless we are in a debugging info section.
+
+2005-05-07  Kevin Kofler  <Kevin@tigcc.ticalc.org>
+
+	* gas/config/tc-m68k.c (md_apply_fix3): Don't range-check PC-relative relocs.
+
+2005-04-19  Kevin Kofler  <Kevin@tigcc.ticalc.org>
+
+	* gas/dwarfdbg.c (process_entries): Always use out_set_addr.
+
+2005-04-07  Kevin Kofler  <Kevin@tigcc.ticalc.org>
+
+	* gas/subsegs.h (segment_info_type): Add dwarf2_secsym structure member.
+	* gas/dwarfdbg.c (section_symbol): Use dwarf2_secsym instead of dot.
+	  (out_debug_info, out_debug_abbrev, out_debug_line): Set dwarf2_secsym.
+	  (out_debug_info, out_debug_abbrev, out_debug_line): Never emit low_pc and high_pc.
+
+2005-04-03  Kevin Kofler  <Kevin@tigcc.ticalc.org>
+
+	* gas/config/tc-m68k.c (md_pseudo_table): Add .file and .loc (DWARF 2).
+	* gas/config/obj-coff.c (size_section): Call eh_frame_estimate_size_before_relax for rs_cfa
+            and dwarf2dbg_estimate_size_before_relax for rs_dwarf2dbg.
+
+2005-04-03  Kevin Kofler  <Kevin@tigcc.ticalc.org>
+
+	* gas/config/tc-m68k.c (md_assemble): Always enable DWARF2 handling code.
+	* Revert (by changing #ifdef BFD_ASSEMBLER to #if 1):
+	  2000-12-11  H.J. Lu  <hjl@gnu.org>
+		* dwarf2dbg.c: Enabled only if BFD_ASSEMBLER is defined.
+	* Revert:
+	  2000-12-21  H.J. Lu  <hjl@gnu.org>
+		* dwarf2dbg.c (dwarf2_finish): Remove #if BFD_ASSEMBLER.
+	* gas/dwarfdbg.c (section_symbol): #define if BFD_ASSEMBLER not defined.
+	  (ffs): #define to __builtin_ffs on MinGW.
+          (dwarf2_finish): Add bfd_get_section_by_name replacement for the !BFD_ASSEMBLER case.
+	* gas/config/obj-coff.c (size_section): Handle rs_cfa and rs_dwarf2dbg.
+	  (fill_section): Handle rs_cfa and rs_dwarf2dbg.
+
+2005-01-30  Kevin Kofler  <Kevin@tigcc.ticalc.org>
+
+	* Import Binutils 2.15 release.
+	* Merge changes from Binutils 2.14 (see ChangeLog-gas-214.txt).
+	* gas/configure (ac_config_files): Remove doc and po makefiles.
+
+	* gas/config/tc-m68k.c (md_assemble): Mark all relocs going through this function
+	    unoptimizable, optimizable relocs go through the relaxer anyway.  Excepted from this
+	    are byte branches because the linker must be able to remove them entirely. This fixes
+	    explicit :l which was being ignored by the linker.
+
+	* opcodes/m68k-opc.c (m68k_opcodes): Add branches without specified size.
+	    (m68k_aliases): Remove them. Fix branch aliases without size specification  (bhs,
+	                    blo, br) to use them instead of the word-sized ones.
+	* gas/config/tc-m68k.c (m68k_ip): Make branches without specified size relaxable.
